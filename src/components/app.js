@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import CommandList from './command_list';
 import TelemetryList from './telemetry_list';
 import LoadButton from './load_button';
-import LoadConfigButton from './load_config_button';
+
 import ConfigList from './config_list';
 import Assembly from './assembly';
+import HcdChannel from './hcd_channel';
+import HcdDashboard from './hcd_dashboard';
 import NavLink from './nav_link';
 
 
@@ -14,7 +16,7 @@ class App extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            activeLinkName: 0,
+            activeLinkName: 'Dashboard',
             activePanelType: 'Dashboard'
         };
         this.handleTabClick = this.handleTabClick.bind(this);
@@ -32,11 +34,18 @@ class App extends Component {
     // Render current active tab content
     renderActiveTabContent() {
 
-        if (this.state.activePanelType === 'Dashboard') return (<h2>Not yet implemented</h2>)
+        if (this.state.activePanelType === 'Dashboard')
+            return (
+                <HcdDashboard />
+            )
         if (this.state.activePanelType === 'Assembly')
         return (
             <Assembly assemblyName={this.state.activeLinkName} />
         )
+        if (this.state.activePanelType === 'Hcd')
+            return (
+                <HcdChannel hcdChannelName={this.state.activeLinkName} axis={this.state.activeLinkName[this.state.activeLinkName.length-1]}/>
+            )
         return (<p>unknown</p>)
 
     }
@@ -54,7 +63,13 @@ class App extends Component {
                             </div>
                             <div className="collapse navbar-collapse">
                                 <ul className="nav navbar-nav">
-                                    <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Dashboard' onClick={this.handleTabClick} panelType='Dashboard' />
+
+                                    <li className="divider"></li>
+                                    <li className="dropdown"><a className="dropdown-toggle" href="#">Applications <b className="caret"></b></a>
+                                        <ul className="dropdown-menu">
+                                            <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Dashboard' onClick={this.handleTabClick} panelType='Dashboard' />
+                                        </ul>
+                                    </li>
                                     <li className="divider"></li>
                                     <li className="dropdown"><a className="dropdown-toggle" href="#">Assemblies <b className="caret"></b></a>
                                         <ul className="dropdown-menu">
@@ -62,19 +77,19 @@ class App extends Component {
                                             <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='DM Optic Assembly' onClick={this.handleTabClick} panelType="Assembly"/>
                                             <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Pupil Stage Assembly' onClick={this.handleTabClick} panelType="Assembly"/>
                                             <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Stimulus Insertion Assembly' onClick={this.handleTabClick} panelType="Assembly"/>
-                                       </ul>
+                                        </ul>
                                     </li>
                                     <li className="divider"></li>
                                     <li className="dropdown"><a className="dropdown-toggle" href="#">Galil HCD <b className="caret"></b></a>
                                         <ul className="dropdown-menu">
-                                            <li><a href="#">Channel A</a></li>
-                                            <li><a href="#">Channel B</a></li>
-                                            <li><a href="#">Channel C</a></li>
-                                            <li><a href="#">Channel D</a></li>
-                                            <li><a href="#">Channel E</a></li>
-                                            <li><a href="#">Channel F</a></li>
-                                            <li><a href="#">Channel G</a></li>
-                                            <li><a href="#">Channel H</a></li>
+                                            <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Channel A' onClick={this.handleTabClick} panelType='Hcd'/>
+                                            <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Channel B' onClick={this.handleTabClick} panelType='Hcd'/>
+                                            <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Channel C' onClick={this.handleTabClick} panelType='Hcd'/>
+                                            <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Channel D' onClick={this.handleTabClick} panelType='Hcd'/>
+                                            <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Channel E' onClick={this.handleTabClick} panelType='Hcd'/>
+                                            <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Channel F' onClick={this.handleTabClick} panelType='Hcd'/>
+                                            <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Channel G' onClick={this.handleTabClick} panelType='Hcd'/>
+                                            <NavLink iconClassName='' activeLinkName={this.state.activeLinkName} linkName='Channel H' onClick={this.handleTabClick} panelType='Hcd'/>
                                         </ul>
                                     </li>
 
@@ -110,7 +125,6 @@ App.defaultProps = {
     defaultActiveLinkName: 'Dashboard',
     defaultActivePanelType: 'Dashboard'
 };
-
 
 
 export default App;

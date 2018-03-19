@@ -6,15 +6,30 @@ import {FETCH_HCD_CONFIG} from '../actions/index';
 import {ActionTypes} from '../websockets';
 
 
+const initialState = {
+    axes: {
+        A: {props: [{name: "dummy", value: "dummy"}]},
+        B: {props: [{name: "dummy", value: "dummy"}]}
+    }
+}
+
 export default function(state = [], action) {
 
-    switch (action.type) {
+    if (action.type.startsWith(FETCH_HCD_CONFIG)) {
 
-        case FETCH_HCD_CONFIG:
-            return action.payload.data;
+        console.log("reducer_hcd_configs called");
 
+        const axis = action.type[action.type.length-1]
+
+
+        return Object.assign({}, state, {
+            axes: {
+                ...state.axes,
+                [axis]: action.payload.data }
+        });
 
     }
 
     return state;
 }
+

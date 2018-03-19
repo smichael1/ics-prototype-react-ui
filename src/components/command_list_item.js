@@ -46,6 +46,7 @@ class CommandListItem extends Component {
             );
         }
 
+
         axios.post('http://localhost:9000/command', {
                 commandSetupConfig: this.props.commandSetupConfig,
                 commandArgs: arr

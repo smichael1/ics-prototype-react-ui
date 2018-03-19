@@ -6,9 +6,15 @@ import LoadButton from './load_button';
 import ConfigList from './config_list';
 import Tabs from './tabs';
 import Tab from './tab';
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {fetchConfig} from "../actions";
 
 
-class Assembly extends Component {
+class HcdChannel extends Component {
+
+
+
 
 
     render() {
@@ -16,10 +22,10 @@ class Assembly extends Component {
         return (
 
             <div>
-            <h2>{this.props.assemblyName}</h2>
+            <h2>HCD {this.props.hcdChannelName}</h2>
 
             <Tabs>
-
+                {/*
                 <Tab iconClassName={'glyphicon glyphicon-cog'} linkName={'Command'}>
                     <div className="tab-pane active">
                         <div className="pull-right">
@@ -35,27 +41,17 @@ class Assembly extends Component {
                         <TelemetryList />
                     </div>
                 </Tab>
-
+                */}
                 <Tab iconClassName={'glyphicon glyphicon-wrench'} linkName={'Configure'}>
                     <div className="tab-pane active">
 
                         <h3>Configuration</h3>
-                        <div className="pull-right">
-                            <LoadConfigButton configFile="singleAxis" />
-                        </div>
-
-                        <h3>Assembly Config</h3>
-                        <ConfigList target="singleAxis"/>
-                        <div className="pull-right">
-                            <LoadConfigButton configFile="galilHCD" />
-                        </div>
-                        <h3>GalilHCD Config</h3>
-                        <ConfigList target="galilHCD"/>
+                        <ConfigList target="galilHCD" axis={this.props.axis}/>
 
                     </div>
                 </Tab>
                 <Tab iconClassName={'glyphicon glyphicon-eye-open'} linkName={'View Logging'}>
-                    <h3>Not yet implemented</h3>
+                    <p>Not yet implemented</p>
                 </Tab>
             </Tabs>
             </div>
@@ -63,4 +59,9 @@ class Assembly extends Component {
     }
 }
 
-export default Assembly;
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({fetchConfig}, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(HcdChannel);
