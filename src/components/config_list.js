@@ -61,16 +61,12 @@ class ConfigList extends Component {
     // updates of each config item's data
     onUpdate(data) {
 
+        console.log("data = " + data)
         this.setState(data)
-        /*
-        if (this.state == null || this.state.updates == null) {
-            this.setState({updates: data})
-        } else  {
-            this.setState(updates[data.key] = data.value);
-            console.log("state = ")
-            console.log(this.state)
-        }
-        */
+
+        console.log("state = ")
+        console.log(this.state)
+
     }
 
     substitute(arr, key, value) {
@@ -151,10 +147,15 @@ class ConfigList extends Component {
         console.log(this.props.hcdConfigs)
 
         const componentConfigs = (this.props.target == "singleAxis") ?
-            this.props.assemblyConfigs : (this.props.hcdConfigs.length == 0) ? this.props.hcdConfigs : this.props.hcdConfigs.axes[this.props.axis].props;
+            this.props.assemblyConfigs : (this.props.hcdConfigs.length == 0) ? this.props.hcdConfigs :
+                (this.props.hcdConfigs.axes[this.props.axis]) ? this.props.hcdConfigs.axes[this.props.axis].props : null;
 
             console.log("componentConfigs: " + this.props.axis)
             console.log(componentConfigs)
+
+            if (componentConfigs == null) {
+                return "Error querying axis configuration";
+            }
 
             return componentConfigs.map((config) => {
 

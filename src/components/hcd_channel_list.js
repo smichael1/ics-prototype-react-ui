@@ -5,6 +5,8 @@ import React, {Component} from 'react';
 import HcdChannelListItem from './hcd_channel_list_item';
 import {connect} from 'react-redux';
 import NotificationSystem from 'react-notification-system';
+import {bindActionCreators} from "redux";
+import {fetchConfig} from '../actions/index';
 
 class HcdChannelList extends Component {
 
@@ -14,7 +16,26 @@ class HcdChannelList extends Component {
         this.renderList = this.renderList.bind(this);
     }
 
+    componentDidMount() {
+        console.log("HCD Channel List::MOUNT")
 
+        // fetch all configs for each axis when component first mounts
+        this.fetchAll()
+
+    }
+
+
+    fetchAll() {
+        this.props.fetchConfig("galilHCD", "A");
+        this.props.fetchConfig("galilHCD", "B");
+        this.props.fetchConfig("galilHCD", "C");
+        this.props.fetchConfig("galilHCD", "D");
+        this.props.fetchConfig("galilHCD", "E");
+        this.props.fetchConfig("galilHCD", "F");
+        this.props.fetchConfig("galilHCD", "G");
+        this.props.fetchConfig("galilHCD", "H");
+
+    }
 
     renderList() {
 
@@ -77,4 +98,8 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(HcdChannelList);
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({fetchConfig}, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HcdChannelList);

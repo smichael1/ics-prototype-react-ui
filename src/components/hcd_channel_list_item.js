@@ -5,6 +5,7 @@ import React, {Component} from 'react';
 
 import axios from 'axios';
 import CommandArg from './command_arg';
+import {connect} from "react-redux";
 
 
 class HcdChannelListItem extends Component {
@@ -63,6 +64,8 @@ class HcdChannelListItem extends Component {
     sendPositionCommand() {
 
         console.log(this.props);
+        const axisConfig = this.getAxisConfigProps();
+        console.log(axisConfig);
 
         const url = 'http://localhost:9000/v1/gs/' + this.state.positionMethod
 
@@ -107,6 +110,8 @@ class HcdChannelListItem extends Component {
     sendInitCommand() {
 
         console.log(this.props);
+        const axisConfig = this.getAxisConfigProps();
+
 
         const url = 'http://localhost:9000/v1/gs/init'
 
@@ -114,7 +119,10 @@ class HcdChannelListItem extends Component {
 
         axios.post(url, {
                 axis: this.props.channel,
-                count: 0
+                count: 0,
+                analogFeedbackSelect: axisConfig["InterpolationCounts"],
+                brushlessModulus: axisConfig["BrushlessModulus"],
+                brushlessZeroVolts: axisConfig["BrushlessZeroVolts"]
             }
         ).then(response => {
             console.log(response)
@@ -193,7 +201,37 @@ class HcdChannelListItem extends Component {
         );
     }
 
+
+
+    getAxisConfigProps() {
+        if (this.props.hcdConfigs.axes) {
+            var testObj = this.nameValueArrayToObject(this.props.hcdConfigs.axes[this.props.channel].props)
+            console.log(testObj)
+            return testObj;
+        }
+
+    }
+
+    nameValueArrayToObject(arr) {
+        var obj = {};
+        arr.forEach(function(data){
+           obj[data.name] = data.value
+        });
+        return obj;
+    }
+
 }
 
+function mapStateToProps(state) {
 
-export default HcdChannelListItem;
+    console.log("HCD CHANNEL LIST ITEM: ")
+    console.log(state.hcdConfigs)
+
+    return {
+         hcdConfigs: state.hcdConfigs
+    }
+
+
+}
+
+export default connect(mapStateToProps, null)(HcdChannelListItem);
