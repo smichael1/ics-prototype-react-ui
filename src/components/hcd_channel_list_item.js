@@ -63,18 +63,12 @@ class HcdChannelListItem extends Component {
 
     sendPositionCommand() {
 
-        console.log(this.props);
-        const axisConfig = this.getAxisConfigProps();
-        console.log(axisConfig);
 
         const url = 'http://localhost:9000/v1/gs/' + this.state.positionMethod
 
         this.props.updateStatusHistory(this.nowFormatted() + "  Channel " + this.props.channel + ": " + this.state.positionMethod + "(" + this.state.positionCounts + " counts) Cmd Sent")
 
-        axios.post(url, {
-            axis: this.props.channel,
-            count: this.state.positionCounts
-            }
+        axios.post(url, this.buildPostForm(this.state.positionCounts)
         ).then(response => {
             console.log(response)
             this.props.updateStatusHistory(this.nowFormatted() + "  Channel " + this.props.channel + ": " + this.state.positionMethod + "(" + this.state.positionCounts + " counts) Cmd Completed: " + response.data)
@@ -93,10 +87,7 @@ class HcdChannelListItem extends Component {
 
         this.props.updateStatusHistory(this.nowFormatted() + "  Channel " + this.props.channel + ": " + "motorOff" + " Cmd Sent")
 
-        axios.post(url, {
-                axis: this.props.channel,
-                count: 0
-            }
+        axios.post(url, this.buildPostForm(0)
         ).then(response => {
             console.log(response)
             this.props.updateStatusHistory(this.nowFormatted() + "  Channel " + this.props.channel + ": " + "motorOff" + " Cmd Completed: " + response.data)
@@ -109,21 +100,11 @@ class HcdChannelListItem extends Component {
 
     sendInitCommand() {
 
-        console.log(this.props);
-        const axisConfig = this.getAxisConfigProps();
-
-
         const url = 'http://localhost:9000/v1/gs/init'
 
         this.props.updateStatusHistory(this.nowFormatted() + "  Channel " + this.props.channel + ": " + "init" + " Cmd Sent")
 
-        axios.post(url, {
-                axis: this.props.channel,
-                count: 0,
-                analogFeedbackSelect: axisConfig["InterpolationCounts"],
-                brushlessModulus: axisConfig["BrushlessModulus"],
-                brushlessZeroVolts: axisConfig["BrushlessZeroVolts"]
-            }
+        axios.post(url, this.buildPostForm(0)
         ).then(response => {
             console.log(response)
             this.props.updateStatusHistory(this.nowFormatted() + "  Channel " + this.props.channel + ": " + "init" + " Cmd Completed: " + response.data)
@@ -142,10 +123,7 @@ class HcdChannelListItem extends Component {
 
         this.props.updateStatusHistory(this.nowFormatted() + "  Channel " + this.props.channel + ": " + "home" + " Cmd Sent")
 
-        axios.post(url, {
-                axis: this.props.channel,
-                count: 0
-            }
+        axios.post(url, this.buildPostForm(0)
         ).then(response => {
             console.log(response)
             this.props.updateStatusHistory(this.nowFormatted() + "  Channel " + this.props.channel + ": " + "home" + " Cmd Completed: " + response.data)
@@ -154,6 +132,20 @@ class HcdChannelListItem extends Component {
             console.log(error);
         });
 
+    }
+
+    buildPostForm(counts) {
+        console.log(this.props);
+        const axisConfig = this.getAxisConfigProps();
+        console.log(axisConfig);
+        return {
+            axis: this.props.channel,
+            count: counts,
+            analogFeedbackSelect: axisConfig["InterpolationCounts"],
+            brushlessModulus: axisConfig["BrushlessModulus"],
+            brushlessZeroVolts: axisConfig["BrushlessZeroVolts"],
+            homingJogSpeed: axisConfig["HomingJogSpeed"]
+        }
     }
 
     handlePositionMethodChange(event) {
@@ -165,13 +157,19 @@ class HcdChannelListItem extends Component {
     }
 
     render() {
+
+        var result = null
+        if (this.props.telemetry && this.props.telemetry.axes) {
+            result = this.props.telemetry.axes.find(x => x.axis == this.props.channel)
+        }
+
         return (
 
             <tr>
                 <td>{this.props.channel}</td>
-                <td>{this.props.status}</td>
-                <td>{this.props.position}</td>
-                <td>{this.props.positionError}</td>
+                <td>{result ? result.status : 'Unknown'}</td>
+                <td>{result ? result.position : 'Unknown'}</td>
+                <td>{result ? result.positionError : 'Unknown'}</td>
 
 
                 <td>
@@ -228,7 +226,8 @@ function mapStateToProps(state) {
     console.log(state.hcdConfigs)
 
     return {
-         hcdConfigs: state.hcdConfigs
+         hcdConfigs: state.hcdConfigs,
+        telemetry: state.telemetry
     }
 
 

@@ -13,7 +13,7 @@ class HcdDashboard extends Component {
 
     updateStatusHistory(newStatus) {
 
-        const newStatusHistory = newStatus + "\n" + this.state.statusHistory
+        const newStatusHistory = this.state.statusHistory + "\n" + newStatus
 
         console.log(newStatusHistory)
 

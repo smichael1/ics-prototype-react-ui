@@ -43,9 +43,6 @@ class HcdChannelList extends Component {
 
             return (
                 <HcdChannelListItem key={axis} channel={axis}
-                                 status='good'
-                                 position='100'
-                                 positionError='100'
                                  positionCommand='positionAbsolute'
                                  positionCounts='30'
                                     updateStatusHistory={this.props.updateStatusHistory.bind(this)} />

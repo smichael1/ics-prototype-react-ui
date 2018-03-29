@@ -11,14 +11,14 @@ export default function(state = [], action) {
     switch (action.type) {
 
         case WebsocketActionTypes.RECEIVE:
-            console.log('telemetry reducer, data: ' + action.payload);
+            //console.log('telemetry reducer, data: ' + action.payload);
 
             const payload = JSON.parse(action.payload);
 
-            if (payload[0]) {
-                if (payload[0].source) {
+            if (payload.axes) {
+
                     return payload;
-                }
+
             }
             return state;
 
