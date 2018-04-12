@@ -144,7 +144,12 @@ class HcdChannelListItem extends Component {
             analogFeedbackSelect: axisConfig["InterpolationCounts"],
             brushlessModulus: axisConfig["BrushlessModulus"],
             brushlessZeroVolts: axisConfig["BrushlessZeroVolts"],
-            homingJogSpeed: axisConfig["HomingJogSpeed"]
+            homingJogSpeed: axisConfig["HomingJogSpeed"],
+            axisType: axisConfig["AxisType"],
+            homingMethod: axisConfig["HomingMethod"],
+            axisLimitHigh: axisConfig["AxisLimitHigh"],
+            axisLimitLow: axisConfig["AxisLimitLow"]
+
         }
     }
 
